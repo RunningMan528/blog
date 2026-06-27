@@ -17,7 +17,9 @@ FROM alpine:3.22
 
 WORKDIR /app
 
-RUN apk add --no-cache ca-certificates tzdata && mkdir -p /app/uploads
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories \
+    && apk add --no-cache ca-certificates tzdata \
+    && mkdir -p /app/uploads
 
 COPY --from=builder /app/blog /app/blog
 
