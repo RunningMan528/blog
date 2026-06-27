@@ -23,9 +23,7 @@ func (f *FileUploadController) UploadFile(ctx *gin.Context) {
 
 	// 保存文件
 	filename := filepath.Base(file.Filename)
-	uploadPath := filepath.Join(f.UploadPath, filename)
-
-	dst := filepath.Join(uploadPath, filename)
+	dst := filepath.Join(f.UploadPath, filename)
 	if err := ctx.SaveUploadedFile(file, dst); err != nil {
 		utils.InternalServerError(ctx, err.Error())
 		return
