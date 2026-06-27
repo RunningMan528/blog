@@ -1,7 +1,6 @@
 package config
 
 import (
-	"blog/config"
 	"blog/models"
 	"fmt"
 	"log"
@@ -71,7 +70,7 @@ func InitMysqlDataBase() {
 	dbUser := GetEnv("DB_USER", "root")
 	dbPassword := GetEnv("DB_PASSWORD", "")
 	dbName := GetEnv("DB_NAME", "blog")
-	if config.GetEnv("GIN_MODE", "release") == "debug" {
+	if GetEnv("GIN_MODE", "release") == "debug" {
 		dbHost = "localhost"
 	}
 
