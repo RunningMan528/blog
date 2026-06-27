@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+uploads
+db
+test
+*.db
+.DS_Store
+README.md
