@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
@@ -79,12 +80,20 @@ func InitMysqlDataBase() {
 		dbUser, dbPassword, dbHost, dbPort, dbName)
 
 	// 连接MySQL数据库
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	for attempt := 1; attempt <= 30; attempt++ {
+		DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+			Logger: logger.Default.LogMode(logger.Info),
+		})
+		if err == nil {
+			break
+		}
+
+		log.Printf("Failed to connect to MySQL database, retrying in 2s (%d/30): %v", attempt, err)
+		time.Sleep(2 * time.Second)
+	}
 
 	if err != nil {
-		log.Fatal("Failed to connect to MySQL database:", err)
+		log.Fatal("Failed to connect to MySQL database after retries:", err)
 	}
 
 	// 自动迁移数据库表结构

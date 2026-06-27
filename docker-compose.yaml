@@ -8,7 +8,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     volumes:
       - ./uploads:/app/uploads
 
@@ -26,6 +27,12 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$${MYSQL_ROOT_PASSWORD} --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
 
 volumes:
   mysql_data:
